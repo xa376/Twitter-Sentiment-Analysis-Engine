@@ -1,7 +1,7 @@
 import tweepy
 from CustomTrie import Trie
 from TrieNode import Node
-from AI import AI
+from SentimentAnalyzer import SentimentAnalyzer
 import os.path
 
 # holds all global variables for the program
@@ -37,7 +37,7 @@ class Globals():
     allWords = Trie()
 
     # stores Naive Bayes AI model
-    sentimentAnalyzer = AI()
+    sentimentAnalyzer = SentimentAnalyzer()
 
     # max results to request from the api during a search
     maxResults = 10
