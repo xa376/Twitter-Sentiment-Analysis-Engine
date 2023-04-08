@@ -1,4 +1,6 @@
-/login.txt
 /training_data.csv
 /training_data_raw.csv
+/test_data_raw.csv
+/test_data.csv
 /history.txt
+/settings.txt

@@ -56,6 +56,7 @@ class InputWindow(tk.Toplevel):
         self.after(1, self.searchWindowInputBox.focus)
 
 
+    # TODO evaluate why internal set assignment
     # predicts then updates predicted text box with predicted text
     def predict(self, event, b, c):
 

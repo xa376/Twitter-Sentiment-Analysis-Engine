@@ -17,6 +17,6 @@ class ButtonStandard(tk.Button):
     def buttonHighlight(self, event):
         event.widget["background"] = GL.activeBackgroundColor
 
-    # removes highlight from button when hovered over
+    # removes highlight from button
     def buttonRemoveHighlight(self, event):
         event.widget["background"] = GL.backgroundColor

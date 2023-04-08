@@ -108,14 +108,14 @@ class SearchMenu(tk.Frame):
         self.negativeProgress.grid(row=5, sticky="nw", padx=10)
 
         # Button that initializes a window to display the positive tweets
-        self.POSITIVEButton = ButtonStandard(self)
-        self.POSITIVEButton.config(text="Positive", command=lambda: TweetsWindow(gui, self.POSITIVE, self.classifiedTweets.tweets[self.POSITIVE]))
-        self.POSITIVEButton.grid(row=6, column=0, sticky="sw", padx=10, pady=10)
+        self.positiveButton = ButtonStandard(self)
+        self.positiveButton.config(text="Positive", command=lambda: TweetsWindow(gui, self.POSITIVE, self.classifiedTweets.tweets[self.POSITIVE]))
+        self.positiveButton.grid(row=6, column=0, sticky="sw", padx=10, pady=10)
 
         # Button that initializes a window to display the negative tweets
-        self.NEGATIVEButton = ButtonStandard(self)
-        self.NEGATIVEButton.config(text="Negative", command=lambda: TweetsWindow(gui, self.NEGATIVE, self.classifiedTweets.tweets[self.NEGATIVE]))
-        self.NEGATIVEButton.grid(row=6, column=0, sticky="sw", padx=100, pady=10)
+        self.negativeButton = ButtonStandard(self)
+        self.negativeButton.config(text="Negative", command=lambda: TweetsWindow(gui, self.NEGATIVE, self.classifiedTweets.tweets[self.NEGATIVE]))
+        self.negativeButton.grid(row=6, column=0, sticky="sw", padx=100, pady=10)
 
         # makes the enter key perform a search
         self.bind("<Return>", self.prepareSearch)
