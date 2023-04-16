@@ -9,6 +9,7 @@ import time
 import csv
 import pickle
 
+# TODO search prediction click to enter
 # TODO make negate words actually have opposite effect?
 # TODO globals import style
 # TODO upload to github

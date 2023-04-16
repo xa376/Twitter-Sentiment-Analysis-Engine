@@ -45,6 +45,7 @@ class InputWindow(tk.Toplevel):
 
         # adds the current selected predictive word to the users input box
         self.predictedTextBox.bind("<Right>", self.addWord)
+        self.predictedTextBox.bind("<Double-Button>", self.addWord)
 
         # sets the search window input box text to initially be the main windows input box text
         self.searchWindowInputBox.insert(0, parent.searchInputBox.get())
@@ -93,6 +94,10 @@ class InputWindow(tk.Toplevel):
 
     # Adds the selected predicted word to the search input box
     def addWord(self, event=None):
+
+        # checks that a word is selected
+        if not self.predictedTextBox.curselection():
+            return
 
         # gets selected word from predicted text box
         wordToAdd = self.predictedTextBox.get(self.predictedTextBox.curselection()[0])
