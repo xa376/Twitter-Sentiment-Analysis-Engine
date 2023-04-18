@@ -1,19 +1,11 @@
-import tkinter as tk
-from tkinter import ttk
 from Globals import Globals as GL
 from GUI import GUI
 import os.path
 from threading import Thread
 from LoadingScreen import LoadingScreen
 import time
-import csv
 import pickle
-
-# TODO search prediction click to enter
-# TODO make negate words actually have opposite effect?
-# TODO globals import style
-# TODO upload to github
-# TODO popup errors?
+import tweepy
 
 def main():
 
@@ -28,11 +20,12 @@ def main():
     loadingThread.start()
 
     # startup tasks to load settings, search history, build the trie predictive text model,
-    # and train the AI model
+    # and train the naive bayes sentiment analysis model
+    connectTwitter()
     readSettings()
     readSearchHistory()
-    readWords()
-    trainAnalyzer()
+    loadTrie()
+    loadAnalyzer()
 
     # Will trigger the loading screen thread to close now that startup tasks are finished
     GL.finishedLoading = True
@@ -46,7 +39,7 @@ def main():
     # displays startup time
     print(f"\nStartup completed in: {round(finish-start, 2)}s\n")
 
-    # initializes and starts the program from the main menu
+    # initializes and starts the programs user interface
     gui = GUI()
     gui.mainloop()
 
@@ -58,19 +51,37 @@ def main():
 
     print("User setup files saved successfully.")
 
-# creates and trains an ai analyzer model if it does not yet exist
-def trainAnalyzer():
+# Logs into twitter client
+def connectTwitter():
+
+    # Reads bearer token from login file and connects to API
+    if os.path.exists("./login.txt"):
+        with open("login.txt", 'r') as file:
+            token = file.readline()
+        GL.client = tweepy.Client(bearer_token=token)
+    else:
+        print("No bearer token found.")
+
+    return
+
+# Attempts to load a SentimentAnalyzer object, creates and trains one if not found
+def loadAnalyzer():
+
+    # Loads SentimentAnalyzer
     if os.path.exists("./analyzer.pickle"):
         print("Analyzer file found, loading analyzer...")
         with open("analyzer.pickle", "rb") as analyzer:
             GL.sentimentAnalyzer = pickle.load(analyzer)
+    # Trains SentimentAnalyzer
     elif os.path.exists("./training_data.csv"):
         print("Analyzer file not found, training new analyzer...")
         GL.sentimentAnalyzer.train("training_data.csv")
         with open("analyzer.pickle", "wb") as analyzer:
             pickle.dump(GL.sentimentAnalyzer, analyzer, protocol=pickle.HIGHEST_PROTOCOL)
+    # No pretrained analyzer or training files found
     else:
         print("Analyzer and training files not found, please redownload the associated files to implement this feature.")
+
     print("Analyzer setup completed.")
     return
 
@@ -86,24 +97,29 @@ def writeSettings():
         file.write(str(GL.maxResults) + "\n" + str(GL.incognitoMode))
     return
 
-# Reads users settings from a settings file
+# Reads users settings from a settings file and sets those settings
 def readSettings():
+
     if os.path.exists("./settings.txt"):
         with open("settings.txt", 'r') as file:
             lines = file.read().splitlines()
             GL.maxResults = int(lines[0])
-            GL.incognitoMode = lines[1] == "True"
+            GL.incognitoMode = (lines[1] == "True")
         print("Settings file loaded successfully.")
     else:
         print("Settings file not found.")
+
     return
 
 # builds the allWords trie using a txt file containing all english words
-def readWords():
+def loadTrie():
+
+    # Loads the Trie object if it exists
     if os.path.exists("./prediction.pickle"):
         print("Text prediction file found, loading prediction object...")
         with open("prediction.pickle", "rb") as prediction:
             GL.allWords = pickle.load(prediction)
+    # Trains the Trie object
     elif os.path.exists("./words.txt"):
         print("Text prediction file not found, creating new prediction object...")
         with open("words.txt", 'r') as file:
@@ -111,11 +127,11 @@ def readWords():
                 GL.allWords.insert(line)
         with open("prediction.pickle", "wb") as prediction:
             pickle.dump(GL.allWords, prediction, protocol=pickle.HIGHEST_PROTOCOL)
+    # No Trie object found
     else:
         print("No text prediction files found. Please redownload.")
 
     print("Text prediction setup completed.")
-
     return
 
 # reads a users search history into the search history set

@@ -1,5 +1,4 @@
 import tkinter as tk
-from tkinter import ttk
 from Globals import Globals as GL
 from SearchMenu import SearchMenu
 import os.path
@@ -12,7 +11,7 @@ class MainMenu(tk.Frame):
     def __init__(self, parent, gui):
         tk.Frame.__init__(self, parent)
 
-        # initializes a class variable with the main menu image
+        # initializes a class variable of the main menu image if it's found
         if os.path.exists("./image_main.png"):
             self.icon = tk.PhotoImage(file='image_main.png', height=250, width=400)
         else:

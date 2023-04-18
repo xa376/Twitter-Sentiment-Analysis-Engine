@@ -42,7 +42,7 @@ class TweetsWindow(tk.Toplevel):
                                   background=GL.activeBackgroundColor, foreground=GL.foregroundColor, yscrollcommand=scrollBar.set)
         tweetDisplayBox.pack()
 
-        # makes the "center" take center text
+        # makes the "center" argument in the tweetDisplayBox center text
         tweetDisplayBox.tag_configure("center", justify="center")
 
         # iterates through each tweet, displaying the current tweet number on one line, and the tweet on the next
@@ -64,5 +64,5 @@ class TweetsWindow(tk.Toplevel):
         # closes window when enter is pressed
         self.bind("<Return>", func=lambda event=None: self.destroy())
         
-        # sets the users focus to the window after its displayed
+        # sets the users focus to this window after its displayed
         self.after(1, self.focus)

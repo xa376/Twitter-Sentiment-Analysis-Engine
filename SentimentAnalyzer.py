@@ -1,6 +1,6 @@
 import csv
 
-# Naive Bayes Classifier
+# Naive Bayes Classifier, used to classify text as either positive or negative in sentiment
 class SentimentAnalyzer():
 
     def __init__(self):
@@ -15,7 +15,7 @@ class SentimentAnalyzer():
         posProb = .5
         negProb = .5
 
-        # iterates through passed words, if word has a score in the ai model, calculates that words probability and
+        # iterates through passed words, if word has a score in the AI model, calculates that words probability and
         # multiplies it by the previous probability
         for word in words:
 
@@ -38,22 +38,16 @@ class SentimentAnalyzer():
         # set that will store all words in the passed text
         words = set()
 
-        # TODO negation test
-        negationList = ["not", "no", "never", "nothing"]
-        negationWords = set(negationList)
-        negation = False
-
         # sets iterator to 0 for proceeding loop
         i = 0
 
         # iterates through the text, adding each word found to the set of found words, except @ mentions
         while i < len(text):
 
-            # i = left pointer, j = right pointer
             j = i
 
             # initial char is the char at index i 
-            char = text[i].lower()
+            char = text[i]
             
             # if current character is a letter a word is started, find the end of the word then add it
             # to the words set
@@ -87,17 +81,9 @@ class SentimentAnalyzer():
                     while j < len(text) and not text[j].isspace():
                         j+=1
 
-                elif word != "":
-
-                    # adds the word to the words set
-                    # TODO negation test
-                    # adds ~1% to accuracy
-                    if word.lower() in negationWords:
-                        negation = True
-                    elif negation:
-                        negation = False
-                    else:
-                        words.add(word.lower())
+                # if word is not empty string, add to words
+                elif word:
+                    words.add(word.lower())
 
             # iterates j to end of word to ignore @ mention
             elif char == "@":
@@ -115,8 +101,8 @@ class SentimentAnalyzer():
     # Trains naive bayes AI model and stores it in wordsWithScore
     def train(self, fileName):
 
-        # Reads in all training data, all training data is pre-tokenized for efficiency
-        # adds 1 to the applicable words score
+        # Reads in all training data, adding 1 to each words score in the wordsWithScore dict
+        # all training data is pre-tokenized for efficiency
         with open(fileName, encoding="utf8") as csvfile:
             reader = csv.reader(csvfile)
             for row in reader:

@@ -28,11 +28,11 @@ class InputWindow(tk.Toplevel):
         self.searchWindowInputBox = ttk.Entry(self, textvariable=self.searchWindowInputBoxText, width=64, font=GL.fontGeneral)
         self.searchWindowInputBox.pack()
 
+        # populates the predictive text options every time a user presses a key in the input box
+        self.searchWindowInputBoxText.trace_add("write", self.predict)
+
         # moves the users focus from the input box to the predictive words box using down arrow
         self.searchWindowInputBox.bind("<Down>", self.moveToListBox)
-
-        # populates the predictive text options every time a user presses a key in the input box
-        self.searchWindowInputBoxText.trace('w', self.predict)
 
         # closes the window when the user presses enter
         self.searchWindowInputBox.bind("<Return>", lambda event=None: self.destroy())
@@ -44,29 +44,29 @@ class InputWindow(tk.Toplevel):
         self.predictedTextBox.pack()
 
         # adds the current selected predictive word to the users input box
+        # when right arrow is pressed or word is double clicked
         self.predictedTextBox.bind("<Right>", self.addWord)
         self.predictedTextBox.bind("<Double-Button>", self.addWord)
 
-        # sets the search window input box text to initially be the main windows input box text
+        # sets the text in this windows input box to be the main windows input box text
         self.searchWindowInputBox.insert(0, parent.searchInputBox.get())
 
-        # sets main windows input box text to this windows text on destroy
+        # sets main windows input box text to this windows text when closed
         self.searchWindowInputBox.bind("<Destroy>", self.onDestroy)
 
-        # after button press event has finished sets focus to inputbox
+        # sets the focus to this windows input box
+        # timed to happen after object is instantiated
         self.after(1, self.searchWindowInputBox.focus)
 
-
-    # TODO evaluate why internal set assignment
     # predicts then updates predicted text box with predicted text
-    def predict(self, event, b, c):
+    # _1 and _2 are excess trace information passed by tkinter
+    def predict(self, event, _1, _2):
 
-        # Clears previously predicted text
+        # Clears previously predicted text options
         self.predictedTextBox.delete(0, tk.END)
-        predictedWords = set()
 
-        # gets the current word being typed, then fills the predictedWords set with suggestions from the trie
-        GL.allWords.predict(self.getCurrWord(event), predictedWords)
+        # gets a collection of all predicted words based off the current word being typed
+        predictedWords = GL.allWords.predict(self.getCurrWord(event))
 
         # displays the predicted words in the predicted text box
         for word in predictedWords:
@@ -74,22 +74,23 @@ class InputWindow(tk.Toplevel):
 
         return
 
-    # gets the current word being type from the search windows input box
+    # gets the current word being typed from this windows input box
     def getCurrWord(self, event):
 
+        # variable holding the currently typed text
         userInput = self.searchWindowInputBoxText.get()
 
-        # sets starting index to last index of users input
+        # sets starting index to last index of users input and word being typed to empty string
         i = -1
         currWord = ""
 
         # iterates from the end of the users input, storing each letter in currWord, stopping when
-        # a letter or number is no longer found
+        # a letter or number is no longer found, this is the word the user is typing
         while i >= -len(userInput) and str.isalnum(userInput[i]):
             currWord = userInput[i] + currWord
             i-=1
 
-        # returns the last word
+        # returns the last word in the input box
         return currWord
 
     # Adds the selected predicted word to the search input box
@@ -111,7 +112,7 @@ class InputWindow(tk.Toplevel):
         # clears predicted text
         self.predictedTextBox.delete(0, tk.END)
 
-        # sets the search windows input box to the previous words plus the new word
+        # sets this windows input box to the previous words plus the new word
         self.searchWindowInputBox.delete(0, tk.END)
         self.searchWindowInputBox.insert(0, prevWords + wordToAdd + " ")
         self.searchWindowInputBox.focus()
@@ -125,7 +126,8 @@ class InputWindow(tk.Toplevel):
         self.predictedTextBox.select_set(0)
         return
         
-    # sets main windows input box text to this windows text and removes focus from that input box
+    # sets search windows input box text to this windows text and removes focus 
+    # from the search windows input box
     def onDestroy(self, event=None):
         self.parent.searchInputBox.delete(0, tk.END)
         self.parent.searchInputBox.insert(0, self.searchWindowInputBoxText.get())

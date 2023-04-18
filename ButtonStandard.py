@@ -7,8 +7,11 @@ class ButtonStandard(tk.Button):
     def __init__(self, parent):
         tk.Button.__init__(self, parent)
 
+        # highlights button when hovered over, removes when not hovered over
         self.bind("<Enter>", self.buttonHighlight)
         self.bind("<Leave>", self.buttonRemoveHighlight)
+
+        # styles button with the global styles
         self.config(font=GL.fontGeneral, background=GL.backgroundColor, foreground=GL.foregroundColor, 
                      activebackground=GL.activeBackgroundColor, activeforeground=GL.activeForegroundColor, 
                       relief=GL.buttonBorder)

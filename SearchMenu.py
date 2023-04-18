@@ -14,7 +14,7 @@ class SearchMenu(tk.Frame):
     def __init__(self, parent, gui):
         tk.Frame.__init__(self, parent)
 
-        # makes class variable referencing gui main window
+        # class variable holding classifiers to use
         self.POSITIVE = "Positive"
         self.NEGATIVE = "Negative"
 
@@ -120,7 +120,7 @@ class SearchMenu(tk.Frame):
         # makes the enter key perform a search
         self.bind("<Return>", self.prepareSearch)
 
-    # Starts search in a thread so current window does not become unresponsive during search
+    # Starts the search in a thread so current window does not become unresponsive during search
     def prepareSearch(self, event=None):
         searchThread = Thread(target=lambda: self.performSearch(event))
         searchThread.start()

@@ -1,20 +1,12 @@
-import tweepy
 from CustomTrie import Trie
-from TrieNode import Node
 from SentimentAnalyzer import SentimentAnalyzer
-import os.path
 
 # holds all global variables for the program
 class Globals():
 
-    # Logs into twitter client
-    if os.path.exists("./login.txt"):
-        with open("login.txt", 'r') as file:
-            token = file.readline()
-        client = tweepy.Client(bearer_token=token)
-    else:
-        print("No bearer token found.")
-
+    # Twitter client used to communicate with API
+    client = None
+    
     # Holds users search history
     searchHistory = set()
 

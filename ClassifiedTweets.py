@@ -1,4 +1,4 @@
-# holds all tweets after they are classified
+# class the acts as storage for all tweets after they are classified
 class ClassifiedTweets():
 
     def __init__(self, classifiers):

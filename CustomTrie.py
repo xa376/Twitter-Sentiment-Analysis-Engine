@@ -25,34 +25,37 @@ class Trie():
         # ending node is last char in word, so set isWord to true
         node.isWord = True
 
-    # TODO clarify
-    # fills the passed predictedWords set reference with words made from children
-    def predict(self, prefix, predictedWords):
+    # returns a collection of predictedWords
+    def predict(self, prefix):
 
-        # max words to put in predictedWords
+        # max words to put in predictedWords, increasing reduces performance
         MAX_VALUES = 10
 
-        # if no word prefix was passed then nothing to predict
-        if not prefix:
-            return
+        # initial empty set
+        predictedWords = set()
 
         # sets current node to root
         node = self.root
 
-        # creates a queue for breadth first search
-        queue = []
+        # if no word prefix was passed then nothing to predict
+        if not prefix:
+            return predictedWords
 
-        # move from root node to current char node
+        # moves from root node to last char node in prefix
         for char in prefix:
 
             # if there are no suggestions to make leaves function
             if not char in node.children.keys():
-                return
+                return predictedWords
 
-            # sets current node to the child node of the current prefix char
+            # sets current node to the last prefix character
             node = node.children[char]
 
-        # appends all of the nodes children to the queue
+        # creates a queue for BFS through Trie
+        queue = []
+
+        # initial queue is the children of the prefix's last char node
+        # because setting to last char node includes the inital prefix in predictedWords collection
         for char, child in node.children.items():
             queue.append((child, prefix + char))
 
@@ -71,4 +74,4 @@ class Trie():
             for char, child in node.children.items():
                 queue.append((child, prefix + char))
 
-        return
+        return predictedWords

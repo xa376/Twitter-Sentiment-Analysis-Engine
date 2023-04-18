@@ -6,7 +6,8 @@ from SearchMenu import SearchMenu
 from HistoryMenu import HistoryMenu
 from SettingsMenu import SettingsMenu
 
-# Main program window, contains MainMenu, SearchMenu, HistoryMenu, SettingsMenu
+# Main program window, contains MainMenu, SearchMenu, HistoryMenu, SettingsMenu, and
+# allows for switching between them
 class GUI(tk.Tk):
 
     def __init__(self):
@@ -58,10 +59,14 @@ class GUI(tk.Tk):
         
         # Initializes all frames and stores them in frames dictionary
         for currentFrame in (MainMenu, SearchMenu, HistoryMenu, SettingsMenu):
+
+            # Initializes a frame with this windows box frame as its parent
             frame = currentFrame(box, self)
 
+            # Stores the frame in the frames dictionary
             self.frames[currentFrame] = frame
 
+            # Makes frame fill its space and sets the background color
             frame.grid(row=0, column=0, sticky="nsew")
             frame.config(bg=GL.backgroundColor)
 
@@ -82,6 +87,6 @@ class GUI(tk.Tk):
         if currentFrame == HistoryMenu:
             frame.updateHistory()
 
-        # sets users focus to the new frame
+        # sets users focus to the frame
         frame.tkraise()
         frame.focus()
