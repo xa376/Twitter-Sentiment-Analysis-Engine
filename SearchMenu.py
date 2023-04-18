@@ -74,7 +74,7 @@ class SearchMenu(tk.Frame):
 
         # initializes a label that will display the total results of a search
         self.totalText = LabelStandard(self, labelText="Total results: ")
-        self.totalText.config(width=350)
+        self.totalText.config(width=350, font=GL.fontTweet)
         self.totalText.grid(row=3, sticky="nw", padx=100)
 
         # initializes a label that will display the total positive results of a search
